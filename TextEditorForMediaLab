@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor for MediaLab</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <!-- Quill text editor documentation: https://quilljs.com/docs/api#content -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script type="module">
+        const { createApp, ref } = Vue;
+        const quillOptions = {
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['image', 'code-block'],
+                ],
+            },
+            theme: 'snow',
+        };
+
+        const vm = createApp({
+            data() {
+                return {
+                    quill: null,
+                    HtmlResult: null,
+                    copied: false
+                }
+            },
+            methods:{
+                ConvertToHtml() {
+                    this.HtmlResult = this.quill.getSemanticHTML();
+                    this.copied = false;
+                },
+                CopyHtml() {
+                    navigator.clipboard.writeText(this.HtmlResult).then(() => {
+                        this.copied = true;
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                }
+            },
+            mounted(){
+                this.quill = new Quill('#quill-editor', quillOptions);
+            }
+        }).mount('#vue-app');
+        document.vm = vm;
+    </script>
+</head>
+<body>
+    <div id="vue-app">
+        <div class="container">
+            <h1>Editor:</h1>
+            <div id="quill-editor" class="mb-2"></div>
+            <button class="btn btn-primary me-1" @click="ConvertToHtml">Convert To HTML</button>
+            <button class="btn btn-secondary" @click="CopyHtml">Copy HTML</button>
+            <span v-if="copied" class="badge bg-success ms-2">Text copied!</span>
+            <div v-if="HtmlResult" style="display:block; border:2px solid gray; margin-top:1em; margin-bottom:1em;"></div>
+            <div style="display:block;">
+                {{ HtmlResult }}
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
