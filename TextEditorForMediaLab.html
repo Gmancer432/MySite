@@ -54,6 +54,18 @@
             theme: 'snow',
         };
 
+        const styleMappings = {
+
+        };
+        const dynamicStyleMappings = [
+            {
+                regex: /^ql-indent-(\d+)$/,
+                style: (match) => {
+                    return { 'padding-left': `${Number(match[1]) * 3}em`};
+                }
+            }
+        ];
+
         const vm = createApp({
             data() {
                 return {
@@ -64,7 +76,41 @@
             },
             methods:{
                 ConvertToHtml() {
-                    this.HtmlResult = this.quill.getSemanticHTML();
+                    var initialStr = this.quill.getSemanticHTML();
+                    const container = document.createElement("div");
+                    container.innerHTML = initialStr;
+
+                    container.querySelectorAll("[class]").forEach(element => {
+                        [...element.classList].forEach(className => {
+
+                            if (styleMappings[className]) {
+                                Object.assign(element.style, styleMappings[className]);
+                                element.classList.remove(className);
+                                return;
+                            }
+
+                            for (const mapping of dynamicStyleMappings) {
+                                const match = className.match(mapping.regex);
+
+                                if (match) {
+                                    Object.assign(element.style, mapping.style(match));
+                                    //Object.assign(element.style, "text-align: 3em;");
+                                    element.classList.remove(className);
+                                    break;
+                                }
+                            }
+
+                            if(element.classList.length === 0){
+                                element.removeAttribute("class");
+                            }
+                        });
+                    });
+
+                    var postString = container.innerHTML;
+                    var spaceRegex = /&nbsp;/g;
+                    postString = postString.replace(spaceRegex, " ");
+
+                    this.HtmlResult = postString;
                     this.copied = false;
                 },
                 CopyHtml() {
@@ -87,12 +133,19 @@
         <div class="container">
             <h1>Editor:</h1>
             <div id="quill-editor" class="mb-2"></div>
+
             <button class="btn btn-primary me-1" @click="ConvertToHtml">Convert To HTML</button>
             <button class="btn btn-secondary" @click="CopyHtml">Copy HTML</button>
             <span v-if="copied" class="badge bg-success ms-2">Text copied!</span>
-            <div v-if="HtmlResult" style="display:block; border:2px solid gray; margin-top:1em; margin-bottom:1em;"></div>
-            <div style="display:block;">
-                {{ HtmlResult }}
+
+            <div v-if="HtmlResult">
+                <div style="display:block; border:2px solid gray; margin-top:1em; margin-bottom:1em;"></div>
+                <div style="display:block; white-space: pre-wrap;">
+                    {{ HtmlResult }}
+                </div>
+                <div style="display:block; border:2px solid gray; margin-top:1em; margin-bottom:1em;"></div>
+                <h1>Preview:</h1>
+                <div v-html="HtmlResult" style="white-space: pre-wrap; border:2px solid gray; padding:1em;"></div>
             </div>
         </div>
         
