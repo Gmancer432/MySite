@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointo Shoppu</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <!-- Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        .wiki-content-table {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            background-color: rgba(0,0,0,0);
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        .wiki-content-table th{
+            background-color: #908149;
+            color: #ECE9E4;
+            line-height: 1.42857;
+            padding: 8px;
+            vertical-align: top;
+        }
+    </style>
+    <script type="module">
+        import { TabContainer, Tab } from "./TabComponent.js";
+        const { createApp, ref } = Vue;
+
+        createApp({
+            components: {
+                TabContainer,
+                Tab
+            },
+            data() {
+                return {
+                    enchantmentsTable: [
+                        {
+                            title: "Concealment",
+                            targets: "Armors",
+                            description: "While equipped, the armor appears to meld into your clothing, effectively hiding itself while giving you its benefits. The transformation does not hold up to physical inspection.",
+                            price: "150GP"
+                        },
+                        { 
+                            title: "Elemental Infusion",
+                            targets: "Weapons",
+                            description: "When enchanting your weapon, choose one of the following damage types: acid, cold, fire, lightning, or thunder. On a successful hit, your weapon deals an additional 1d4 damage of that type.",
+                            price: "200GP"
+                        },
+                        {
+                            title: "Magical Enhancement",
+                            targets: "Weapons, Armors/Shields",
+                            description: "Enchant your item to +1. For weapons, this means +1 to your attack and damage rolls. For armors/shields, this means +1 to your AC while equipped.",
+                            price: "250GP"
+                        },
+                        {
+                            title: "Custom",
+                            description: "Other enchantments may be available upon request. See the CUSTOM tab for more details.",
+                            price: ""
+                        }
+                    ],
+                    potionsTable: [
+                        {
+                            title: "Healing",
+                            description: "Heals 2d4+2 HP",
+                            price: "25GP"
+                        },
+                        {
+                            title: "Greater Healing",
+                            description: "Heals 4d4+4 HP",
+                            price: "50GP"
+                        },
+                        {
+                            title: "Superior Healing",
+                            description: "Heals 8d4+4 HP",
+                            price: "250GP"
+                        },
+                    ],
+                    scrollsTable: [
+                        {
+                            title: "Level 1",
+                            price: "50GP"
+                        },
+                        {
+                            title: "Level 2",
+                            price: "100GP"
+                        },
+                        {
+                            title: "Level 3",
+                            price: "200GP"
+                        },
+                        {
+                            title: "Level 4",
+                            price: "400GP"
+                        },
+                        {
+                            title: "Spellscribe Materials",
+                            description: "For the aspiring wizard. Used when copying spells into your spellbook.",
+                            price: "50GP per spell level"
+                        },
+                        {
+                            title: "Jim's Magic Purchasing Order",
+                            description: "I'm not a huge fan of just evaporating gold into thin air in order to copy spells into your spellbook. However, I understand that going back to town everytime you want to copy a spell can get somewhat tedious. How about we compromise with this handy dandy new magic item? Simply fold some GP into the magic paper, and spellscribing materials will be shipped straight to you! It even comes with a reserve stock, in case you need some while you're outside the typical service area. Get it now while this offer lasts!",
+                            price: "150GP"
+                        }
+
+                    ]
+                };
+            }
+        }).mount('#app');
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <img id="shopkeep" src="gerson boom.png" class="col-8 col-md-4 mt-2 mb-2"
+            style="display:block; margin-left:auto; margin-right:auto;"></img>
+        <tab-container id="shopTabs" style="max-width:50em; margin-left:auto; margin-right:auto;">
+            <tab id="landing" hide-tab="true" default-active="true">
+                Welcome! Make sure you spend your money wisely! :D<br><br>
+                ... I can't actually take any of your gold here, so I'll just have to trust you'll stay within your
+                budget.
+            </tab>
+            <tab name="Armor and Weapons" id="armor_weapons">
+                <p>Table generously stolen from dnd5e.wikidot.com</p>
+                <div id="page-content">
+                    <h2 id="toc0"><span>Light Armor</span></h2>
+                    <table class="wiki-content-table">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Armor Class (AC)</th>
+                                <th>Strength</th>
+                                <th>Stealth</th>
+                                <th>Weight</th>
+                                <th>Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Padded</td>
+                                <td>11 + Dex modifier</td>
+                                <td>-</td>
+                                <td>Disadvantage</td>
+                                <td>8&nbsp;lb.</td>
+                                <td>5 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Leather</td>
+                                <td>11 + Dex modifier</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>10&nbsp;lb.</td>
+                                <td>10 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Studded Leather</td>
+                                <td>12 + Dex Modifier</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>13&nbsp;lb.</td>
+                                <td>45 gp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h2 id="toc1"><span>Medium Armor</span></h2>
+                    <table class="wiki-content-table">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Armor Class (AC)</th>
+                                <th>Strength</th>
+                                <th>Stealth</th>
+                                <th>Weight</th>
+                                <th>Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Hide</td>
+                                <td>12 + Dex modifier (max 2)</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>12&nbsp;lb.</td>
+                                <td>10 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Chain Shirt</td>
+                                <td>13 + Dex modifier (max 2)</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>20&nbsp;lb.</td>
+                                <td>50 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Scale Mail</td>
+                                <td>14 + Dex modifier (max 2)</td>
+                                <td>-</td>
+                                <td>Disadvantage</td>
+                                <td>45&nbsp;lb.</td>
+                                <td>50 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Spiked Armor</td>
+                                <td>14 + Dex modifier (max 2)</td>
+                                <td>-</td>
+                                <td>Disadvantage</td>
+                                <td>45&nbsp;lb.</td>
+                                <td>75 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Breastplate</td>
+                                <td>14 + Dex modifier (max 2)</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>20&nbsp;lb.</td>
+                                <td>400 gp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h2 id="toc2"><span>Heavy Armor</span></h2>
+                    <table class="wiki-content-table">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Armor Class (AC)</th>
+                                <th>Strength</th>
+                                <th>Stealth</th>
+                                <th>Weight</th>
+                                <th>Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Ring Mail</td>
+                                <td>14</td>
+                                <td>-</td>
+                                <td>Disadvantage</td>
+                                <td>40&nbsp;lb.</td>
+                                <td>30 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Chain Mail</td>
+                                <td>16</td>
+                                <td>Str 13</td>
+                                <td>Disadvantage</td>
+                                <td>55&nbsp;lb.</td>
+                                <td>75 gp</td>
+                            </tr>
+                            <tr>
+                                <td>Splint</td>
+                                <td>17</td>
+                                <td>Str 15</td>
+                                <td>Disadvantage</td>
+                                <td>60&nbsp;lb.</td>
+                                <td>200 gp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h2 id="toc3"><span>Shield</span></h2>
+                    <table class="wiki-content-table">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Armor Class (AC)</th>
+                                <th>Strength</th>
+                                <th>Stealth</th>
+                                <th>Weight</th>
+                                <th>Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Shield</td>
+                                <td>+2</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>6&nbsp;lb.</td>
+                                <td>10 gp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>As far as weapons go, I won't put the full table here. If you don't already have the weapon you want, you can purchase what you want using the prices at <a href="https://dnd5e.wikidot.com/weapons" target="_blank">this link</a></p>
+                <p>You can also apply silver to your weapon or 10 pieces of ammunition, at a cost of 100GP</p>
+            </tab>
+            <tab name="Enchantments" id="enchantments">
+                <p>All enchanted weapons become magical for the purpose of calculating damage.</p>
+                <p>Max one enchantment per item.</p>
+                <div v-for="ench in enchantmentsTable">
+                    <div class="row mb-4">
+                        <div class="col-10">
+                            <h4>{{ench.title}}</h4>
+                            <span v-if="ench.targets"><em>{{ench.targets}}</em><br></span>
+                            <span>{{ench.description}}</span>
+                        </div>
+                        <div class="col-2 align-content-center">
+                            {{ench.price}}
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab name="Magic and Components" id="magic">
+                <h3>Material Components</h3>
+                <p>Common material components, such as scrying materials or diamond dust, can be purchased at their given price. Specialty components, such as a metal rod attuned to a certain dimension, can not be purchased at this shop.</p>
+                <h3>Potions</h3>
+                <p>Limited time offer! Health potions are 50% off their usual price!</p>
+                <div v-for="item in potionsTable">
+                    <div class="row mb-4">
+                        <div class="col-10">
+                            <h4>{{item.title}}</h4>
+                            <span>{{item.description}}</span>
+                        </div>
+                        <div class="col-2 align-content-center">
+                            {{item.price}}
+                        </div>
+                    </div>
+                </div>
+                <h3>Spell Scrolls</h3>
+                <p>Keep in mind the requirements for using spell scrolls.</p>
+                <div v-for="item in scrollsTable">
+                    <div class="row mb-4">
+                        <div class="col-10">
+                            <h4>{{item.title}}</h4>
+                            <span>{{item.description}}</span>
+                        </div>
+                        <div class="col-2 align-content-center">
+                            {{item.price}}
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab name="Custom" id="custom">
+                <p>Were you hoping to find something that isn't here? Or maybe were you wanting a different kind of starting bonus altogether?</p>
+                <p>Special requests, including requests for magic items, unique enchantments, and more, can be made during your character's session zero.</p>
+            </tab>
+        </tab-container>
+    </div>
+</body>
+
+</html>
