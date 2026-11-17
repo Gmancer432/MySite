@@ -38,7 +38,7 @@ var ComputeShaderCode = `
             let x = id.x;
             let y = id.y;
 
-            if (x >= windowParams.screenSize.x || y >= windowParams.screenSize.x) {
+            if (x >= windowParams.screenSize.x || y >= windowParams.screenSize.y) {
                 return;
             }
 
