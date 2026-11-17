@@ -58,6 +58,17 @@ let height = 600;
 let scrollX = 0;
 let scrollY = 0;
 
+// helpers for mobile tap scrolling
+let lastPointerX = 0;
+let lastPointerY = 0;
+let velocityX = 0;
+let velocityY = 0;
+let lastPointerTime = 0;
+let isDragging = false;
+let animationFrame = null;
+const friction = 0.95;
+const stopThreshold = 0.1;
+
 var device;
 var windowBuffer;
 var OnScroll;
@@ -93,6 +104,7 @@ const obj = {
 				GPUBufferUsage.COPY_DST
 		});
 
+		// desktop scrolling helper
 		const canvas = document.getElementById("canvas");
 		canvas.addEventListener("wheel", (event) => {
 			event.preventDefault();
@@ -100,6 +112,95 @@ const obj = {
 			scrollY += Math.round(event.deltaY);
 			if(OnScroll) OnScroll(scrollX, scrollY);
 		}, { passive: false });
+
+		// mobile tap/drag helpers
+		function startInertia() {
+			if (animationFrame !== null) {
+				cancelAnimationFrame(animationFrame);
+			}
+
+			let lastFrameTime = performance.now();
+
+			function animate(currentTime) {
+				const deltaTime = currentTime - lastFrameTime;
+				lastFrameTime = currentTime;
+
+				// Apply movement.
+				scrollX += velocityX * deltaTime;
+				scrollY += velocityY * deltaTime;
+
+				// Apply friction.
+				const frictionFactor = Math.pow(friction, deltaTime / 16.67);
+
+				velocityX *= frictionFactor;
+				velocityY *= frictionFactor;
+
+				if(OnScroll) OnScroll(scrollX, scrollY);
+
+				// Stop when movement becomes negligible.
+				if (
+					Math.abs(velocityX) < stopThreshold &&
+					Math.abs(velocityY) < stopThreshold
+				) {
+					animationFrame = null;
+					return;
+				}
+
+				animationFrame = requestAnimationFrame(animate);
+			}
+
+			animationFrame = requestAnimationFrame(animate);
+		}
+		canvas.addEventListener("pointerdown", (event) => {
+			isDragging = true;
+
+			lastPointerX = event.clientX;
+			lastPointerY = event.clientY;
+			lastPointerTime = performance.now();
+
+			// Stop any existing momentum.
+			velocityX = 0;
+			velocityY = 0;
+
+			if (animationFrame !== null) {
+				cancelAnimationFrame(animationFrame);
+				animationFrame = null;
+			}
+
+			canvas.setPointerCapture(event.pointerId);
+		});
+		canvas.addEventListener("pointermove", (event) => {
+			if (!isDragging) return;
+
+			const currentTime = performance.now();
+
+			const deltaX = lastPointerX - event.clientX;
+			const deltaY = lastPointerY - event.clientY;
+
+			const deltaTime = currentTime - lastPointerTime;
+
+			scrollX += Math.round(deltaX);
+			scrollY += Math.round(deltaY);
+
+			if (deltaTime > 0) {
+				velocityX = deltaX / deltaTime;
+				velocityY = deltaY / deltaTime;
+			}
+
+			lastPointerX = event.clientX;
+			lastPointerY = event.clientY;
+			lastPointerTime = currentTime;
+
+			if(OnScroll) OnScroll(scrollX, scrollY);
+		});
+		canvas.addEventListener("pointerup", () => {
+			isDragging = false;
+			startInertia();
+		});
+		canvas.addEventListener("pointercancel", () => {
+			isDragging = false;
+			startInertia();
+		});
 
 		// determine dimensions of window
 		var dpr = window.devicePixelRatio; // ratio of screen pixels to css pixels
