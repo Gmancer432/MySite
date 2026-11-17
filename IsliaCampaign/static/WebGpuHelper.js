@@ -203,9 +203,21 @@ const obj = {
 		});
 
 		// determine dimensions of window
-		var dpr = window.devicePixelRatio; // ratio of screen pixels to css pixels
-		width = canvas.clientWidth;
-		height = canvas.clientHeight;
+		var dpr = window.devicePixelRatio || 1; // ratio of screen pixels to css pixels
+		width = canvas.clientWidth * dpr;
+		height = canvas.clientHeight * dpr;
+		const pixelCount = width * height;
+
+		const maxPixels = 1500000;
+		if (pixelCount > maxPixels) {
+			const scale = Math.sqrt(maxPixels / pixelCount);
+
+			width *= scale;
+			height *= scale;
+		}
+
+		width = Math.floor(width);
+		height = Math.floor(height);
 		canvas.width = width;
 		canvas.height = height;
 		device.queue.writeBuffer(
