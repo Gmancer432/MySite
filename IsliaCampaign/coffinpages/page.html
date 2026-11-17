@@ -1,0 +1,39 @@
+<head>
+    <script src="pagenav.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+    <script type="module">
+        async function getMdFile(filename){
+            const response = await fetch('./'+filename+'.md');
+            // fetch() only rejects on network failures, so check response.ok manually
+            if (!response.ok) {
+                throw new Error('Http Error' + response.status);
+            }
+            const text = await response.text();
+            return text;
+        }
+        
+        var md = null;
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('p')) {
+                var filename = params.get('p');
+                try{
+                    md = await getMdFile(filename);
+                    addPageToVisited(filename);
+                }
+                catch(error){
+                    md = error.message;
+                }
+            }
+            else {
+                md = 'Your hand is empty. Try picking up a page with the buttons below.'
+            }
+            document.querySelector('#page-content').innerHTML = marked.parse(md);
+        });
+    </script>
+</head>
+<body>
+    <div id="page-content"></div>
+    <button onclick="pickRandomPage()">Pick a random page</button>
+    <a href="./index.html">Go to index</a>
+</body>
