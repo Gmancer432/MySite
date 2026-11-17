@@ -115,6 +115,9 @@ const obj = {
 
 		// mobile tap/drag helpers
 		function startInertia() {
+			// limit velocity during inertia
+			velocityX = Math.min(velocityX, 100);
+			velocityY = Math.min(velocityY, 100);
 			if (animationFrame !== null) {
 				cancelAnimationFrame(animationFrame);
 			}
