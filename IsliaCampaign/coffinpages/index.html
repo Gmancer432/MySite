@@ -1,4 +1,7 @@
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js"></script>
     <script src="pagenav.js"></script>
     <script type="module">
         import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
@@ -24,8 +27,8 @@
         }).mount('#app');
     </script>
 </head>
-<body>
-    <div id="app">
+<body style="background-color:#f0f0f0">
+    <div id="app" class="container mt-5 p-4" style="background-color:white">
         <ul>
             <li v-for="p in pageList">
                 <a :href="'./page.html?p='+p">{{p}}</a>

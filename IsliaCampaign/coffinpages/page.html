@@ -1,6 +1,9 @@
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css">
     <script src="pagenav.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
         async function getMdFile(filename){
             const response = await fetch('./'+filename+'.md');
@@ -32,8 +35,10 @@
         });
     </script>
 </head>
-<body>
-    <div id="page-content"></div>
-    <button onclick="pickRandomPage()">Pick a random page</button>
-    <a href="./index.html">Go to index</a>
+<body style="background-color:#f0f0f0">
+    <div class="container mt-5 p-4" style="background-color:white">
+        <div id="page-content" class="mb-5"></div>
+        <button onclick="pickRandomPage()" class="me-2">Pick a random page</button>
+        <a href="./index.html">Go to index</a>
+    </div>
 </body>
